@@ -1,0 +1,12 @@
+Django<=4
+django-filter
+djangorestframework
+Markdown
+pandas
+python-dateutil
+pytz
+PyYAML
+pyzmq
+uritemplate
+xlrd
+gunicorn
