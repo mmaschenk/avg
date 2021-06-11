@@ -22,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("DJANGO_SECRET")
+SECRET_KEY = os.getenv("DJANGO_SECRET", "fw2wa4gp+hc7H4l3nwl=y2r-dnbl-q(P3uqa3qmv7y0e+qw128")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -78,9 +78,17 @@ WSGI_APPLICATION = 'avgregister.wsgi.application'
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
+    'localdefault': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+    },
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.getenv("DBNAME", 'django'),
+        'USER': os.getenv("DBUSER", 'django'),
+        'PASSWORD': os.getenv("DBPASSWORD", 'django'),
+        'HOST': os.getenv("DBHOST", 'mysql'),
+        'PORT': os.getenv("DBPORT", '3306'),
     }
 }
 

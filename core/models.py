@@ -50,7 +50,7 @@ class AVGRegisterline(models.Model):
     in_welke_landen_worden_de_gegevens_verwerkt = models.CharField(max_length=256)
     vestigingsland_van_de_verwerker = models.CharField(max_length=256)
     bewaartermijn = models.TextField()
-    beveiligingsmaatregelen_die_genomen_worden_om_de_gegevens_te_beveiligen = models.TextField()
+    beveiligingsmaatregelen_die_genomen_worden_om_de_gegevens_te_beveiligen = models.TextField(db_column="beveiligingsmaatregelen")
     bron_waar_de_gegevens_worden_verkregen = models.CharField(max_length=256)
     DPIA_uitgevoerd = models.BooleanField(null=True)
     bevat_persoonsgegevens = models.BooleanField(null=True)

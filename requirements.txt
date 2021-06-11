@@ -10,3 +10,4 @@ pyzmq
 uritemplate
 xlrd
 gunicorn
+mysqlclient
