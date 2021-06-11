@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: avg
+  name: avg
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: avg
+  template:
+    metadata:
+      labels:
+        app: avg
+    spec:
+      containers:
+      - env:
+        - name: TZ
+          value: Europe/Berlin
+        - name: DBHOST
+          value: db
+        - name: DBNAME
+          valueFrom:
+            configMapKeyRef:
+              name: config
+              key: MYSQL_DATABASE
+        - name: DBPASSWORD
+          valueFrom:
+            configMapKeyRef:
+              name: config
+              key: MYSQL_PASSWORD
+        - name: DBUSER
+          valueFrom:
+            configMapKeyRef:
+              name: config
+              key: MYSQL_USER
+        name: avg
+        image: ghcr.io/mmaschenk/avg:v0.1
+        ports:
+        - containerPort: 8000
+          protocol: TCP
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: avg
+spec:
+  ports:
+    - name: http
+      port: 8000
+      targetPort: 8000
+      protocol: TCP
+  selector:
+    app: avg

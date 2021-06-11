@@ -1,0 +1,19 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  name: avg
+spec:
+  rules:
+  - host: <hostname>
+    http:
+      paths:
+      - backend:
+          serviceName: avg
+          servicePort: 8000
+        path: /
+  tls:
+  - hosts:
+    - <hostname>>
+    secretName: avg-cert
