@@ -8,4 +8,4 @@ from .serializers import AVGRegisterlineSerializer
 class AVGRegisterlineViewSet(viewsets.ModelViewSet):
     queryset = AVGRegisterline.objects.all()
     serializer_class = AVGRegisterlineSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated]
