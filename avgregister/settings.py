@@ -27,7 +27,7 @@ SECRET_KEY = os.getenv("DJANGO_SECRET", "fw2wa4gp+hc7H4l3nwl=y2r-dnbl-q(P3uqa3qm
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [ os.getenv("PUBLIC_SITE_NAME", "localhost") ]
 
 
 # Application definition
