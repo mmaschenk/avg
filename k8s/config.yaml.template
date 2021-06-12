@@ -7,3 +7,5 @@ data:
   MYSQL_PASSWORD: <yourpassword>
   MYSQL_USER: avg
   MYSQL_ROOT_PASSWORD: <yourrootpassword>
+  DJANGO_SECRET: <generate your django secret, see next line> 
+  # python -c "import secrets; print(secrets.token_urlsafe())"
