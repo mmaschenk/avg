@@ -63,6 +63,8 @@ class AVGRegisterlineAdmin(admin.ModelAdmin):
         labeller.boolean = True
         return labeller
 
+    search_fields = ( 'verwerking', 'applicatienaam')
+    
     actions = [ deleteAllAVG ]
     list_display_links = ('verwerking', 'applicatienaam',)
     list_display = ( 
