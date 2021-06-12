@@ -28,6 +28,8 @@ from core import views
 router = routers.DefaultRouter()
 router.register(r'avgregisterline', views.AVGRegisterlineViewSet)
 
+class IndexView(TemplateView):
+    template_name = "index.html"
 
 urlpatterns = [
     path('admin/', admin.site.urls),    
@@ -42,6 +44,7 @@ urlpatterns = [
         description="API for manipulating AVG regsitrations",
         version="1.0.0"
     ), name='openapi-schema'),
+    path('', IndexView.as_view()),
 ]
 
 urlpatterns += staticfiles_urlpatterns()
