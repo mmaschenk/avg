@@ -8,6 +8,6 @@ pytz
 PyYAML
 pyzmq
 uritemplate
-xlrd
+openpyxl
 gunicorn
 mysqlclient

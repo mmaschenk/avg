@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import AVGRegisterline
+from .models import AVGRegisterline, SharepointExcelFile
 
 from django.contrib.admin import AdminSite
 
@@ -7,8 +7,6 @@ class MyAdminSite(AdminSite):
     site_header = 'Monty Python administration'
 
 admin_site = MyAdminSite(name='myadmin')
-
-
 
 # Register your models here.
 
@@ -50,6 +48,10 @@ labelmap = {
 admin.site.site_title = 'My site'
 admin.site.site_header = 'AVG Register TU Delft'
 
+@admin.action(description="Delete all AVG registerlines!!!")
+def deleteAllAVG(modeladmin, request, queryset):
+    AVGRegisterline.objects.all().delete()
+
 @admin.register(AVGRegisterline)
 #@admin_site.register(AVGRegisterline)
 class AVGRegisterlineAdmin(admin.ModelAdmin):
@@ -61,6 +63,7 @@ class AVGRegisterlineAdmin(admin.ModelAdmin):
         labeller.boolean = True
         return labeller
 
+    actions = [ deleteAllAVG ]
     list_display_links = ('verwerking', 'applicatienaam',)
     list_display = ( 
         'verwerking', 'applicatienaam', 'inschatting_aantal_betrokkenen',
@@ -100,3 +103,7 @@ class AVGRegisterlineAdmin(admin.ModelAdmin):
     list_filter = ( 'bevat_persoonsgegevens', 'DPIA_uitgevoerd', 'verwerkersovereenkomst', 'inschatting_aantal_betrokkenen')
 
     empty_value_display = '-'
+
+@admin.register(SharepointExcelFile)
+class SharepointExcelFileAdmin(admin.ModelAdmin):
+    list_display = ( 'uploaded', )

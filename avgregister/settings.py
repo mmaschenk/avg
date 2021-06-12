@@ -27,8 +27,9 @@ SECRET_KEY = os.getenv("DJANGO_SECRET", "fw2wa4gp+hc7H4l3nwl=y2r-dnbl-q(P3uqa3qm
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [ os.getenv("PUBLIC_SITE_NAME", "localhost") ]
+ALLOWED_HOSTS = [ os.getenv("PUBLIC_SITE_NAME", "127.0.0.1") ]
 
+MEDIA_ROOT = "datauploads"
 
 # Application definition
 
@@ -77,20 +78,25 @@ WSGI_APPLICATION = 'avgregister.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES = {
-    'localdefault': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    },
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv("DBNAME", 'django'),
-        'USER': os.getenv("DBUSER", 'django'),
-        'PASSWORD': os.getenv("DBPASSWORD", 'django'),
-        'HOST': os.getenv("DBHOST", 'mysql'),
-        'PORT': os.getenv("DBPORT", '3306'),
+DEVMODE = os.getenv("DEVMODE", "productionmode")
+if DEVMODE != 'productionmode':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': os.getenv("DBNAME", 'django'),
+            'USER': os.getenv("DBUSER", 'django'),
+            'PASSWORD': os.getenv("DBPASSWORD", 'django'),
+            'HOST': os.getenv("DBHOST", 'mysql'),
+            'PORT': os.getenv("DBPORT", '3306'),
+        }
+    }
 
 
 # Password validation
@@ -137,8 +143,11 @@ REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.DjangoModelPermissions'
     ]
 }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000
