@@ -37,8 +37,13 @@ spec:
             configMapKeyRef:
               name: config
               key: MYSQL_USER
+        - name: PUBLIC_SITE_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: config
+              key: PUBLIC_SITE_NAME
         name: avg
-        image: ghcr.io/mmaschenk/avg:v0.1
+        image: ghcr.io/mmaschenk/avg:v0.2.1
         ports:
         - containerPort: 8000
           protocol: TCP
