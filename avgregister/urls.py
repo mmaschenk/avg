@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.http import request
 from django.urls import path
 from django.urls.conf import include
 
@@ -25,11 +26,20 @@ from rest_framework import routers
 from rest_framework.schemas import get_schema_view
 from core import views
 
+from rest_framework.authtoken.models import Token
+
 router = routers.DefaultRouter()
 router.register(r'avgregisterline', views.AVGRegisterlineViewSet)
 
 class IndexView(TemplateView):
     template_name = "index.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.user and not self.request.user.is_anonymous:
+            token, created = Token.objects.get_or_create(user=self.request.user)
+            context['token'] = token
+        return context
 
 urlpatterns = [
     path('admin/', admin.site.urls),    

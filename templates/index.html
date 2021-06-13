@@ -13,7 +13,6 @@
                 margin-bottom: 20px;
                 border-radius: 20px;
                 text-align: center;
-                height: 50px;
                 vertical-align:middle;
             }
 
@@ -37,22 +36,50 @@
                 border-color: #744a25;;
                 color: white;
             }
+
+            #header pre {
+                text-align: left;
+                margin-left: 10%;
+                background: grey;
+                padding: 5px;
+            }
             
 
         </style>
     </head>
 <body>
     <div id="header" class="infoblocks">
-    <h>AVG pilot page</h>
+    <p><h>AVG pilot page</h></p>
+
+    {% if user.is_authenticated %}
+        <p>You are logged in as: {{ user.get_username }}</p>
+        <p>Click <a href="{% url 'rest_framework:logout' %}">here</a> to logout </p>
+        <p>Your api token for use in rest calls is: {{ token }}</p>
+
+        <p>For instance, to get all entries, you could use: 
+            <pre>curl -X 'GET'   'http://{{request.get_host}}/api/avgregisterline/' \
+    -H 'accept: application/json' \
+    -H 'Authorization: Token 0cd2a711af5272cc73aac34db7b98d025c000b8a'</pre>
+        </p>
+    {% endif %}
     </div>
+
+    
 
     <div id="hi" class="infoblocks">
-    <p>Welcome. Go to <a href='/admin'>the admin page</a> first to log in</p>
+    <p>Welcome. 
+        {% if user.is_authenticated %}
+        Go to <a href='/admin'>the admin page</a> to check the actual contents of the register</p>
+        {% else %}
+        Please first <a href="{% url 'rest_framework:login' %}">login here</a>.
+        {% endif %}    
     </div>
 
+    {% if user.is_authenticated %}
     <div id="toapi" class="infoblocks">
-    <p>Then come back here to visit the <a href="/api-doc">API documentation page</a> or the <a href="/api">direct api page</a></p>
+    <p>Visit the swagger-generated <a href="/api-doc">API documentation page</a> or go to the <a href="/api">direct api page</a></p>
     </div>
+    {% endif %}
 
     <div id="explanation" class="infoblocks">
     <p>Do not visit the api pages before logging in. You will not see any results. This is intentional</p>
