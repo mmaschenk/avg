@@ -8,6 +8,14 @@ class MyAdminSite(AdminSite):
 
 admin_site = MyAdminSite(name='myadmin')
 
+
+def breaksublist(worklist, count):
+    sublist = []
+    while worklist:
+        sublist.append(tuple(worklist[:count]))
+        worklist = worklist[count:]
+    return tuple(sublist)
+
 # Register your models here.
 
 labelmap = {
@@ -101,6 +109,40 @@ class AVGRegisterlineAdmin(admin.ModelAdmin):
         reg_label('registratie_van_religie'),
         reg_label('registratie_van_genetische_informatie'),
         reg_label('registratie_van_biometrische_informatie'),    
+    )
+    fieldsets = (
+        (None, {
+            'fields': (('verwerking', 'applicatienaam'), 'doel_van_de_verwerking', 
+                        'rechtmatige_grondslag', ('DPIA_uitgevoerd', 'bevat_persoonsgegevens'), 'opmerkingen')
+        }),
+        ('Stakeholders', {
+            'fields': ( ('eigenaar', 'beheerders'), 
+                        ('betrokkenen', 'inschatting_aantal_betrokkenen')),
+        }),
+        ('Registraties', {
+            'classes': ('collapse',),
+            'fields': breaksublist( 
+                ('registratie_van_NAW_gegevens', 'registratie_van_genderinformatie', 'registratie_van_geboortedatum',
+                'registratie_van_geboorteplaats', 'registratie_van_nationaliteit', 'registratie_van_IBAN_nummer',
+                'verwerking_van_foto', 'registratie_van_emailadres', 'registratie_van_telefoonnummer',
+                'registratie_van_identificatiebewijs', 'registratie_van_BSN_nummer', 'registratie_van_studienummer',
+                'registratie_van_personeelsnummer', 'registratie_van_videobeeldinformatie', 'registratie_van_geluidsinformatie',
+                'registratie_van_locatie_informatie', 'registratie_van_financiële_informatie', 'registratie_van_burgerlijke_staat',
+                'registratie_van_gezinssamenstelling', 'registratie_van_lidmaatschap_van_een_vakbond', 'registratie_van_strafrechtelijke_gegevens',
+                'registratie_van_gezondheidsgegevens', 'registratie_van_opleidingsinformatie', 'registratie_van_functie_informatie',
+                'registratie_van_seksuele_geaardheid', 'registratie_van_politieke_voorkeur', 'registratie_van_religie',
+                'registratie_van_genetische_informatie', 'registratie_van_biometrische_informatie',),                
+                3) + ('andere_categorieën_persoonsgegevens',),            
+        }),
+        ('Verwerking', {
+            'fields': ( ('naam_verwerker', 'ontvangers',),
+                        ('in_welke_landen_worden_de_gegevens_verwerkt', 'vestigingsland_van_de_verwerker'),
+                    'bewaartermijn', 'beveiligingsmaatregelen_die_genomen_worden_om_de_gegevens_te_beveiligen',
+                    'bron_waar_de_gegevens_worden_verkregen')
+        }),
+        ('Opslag', {
+            'fields': ( 'naam_opslagmedium', )
+        })
     )
     list_filter = ( 'bevat_persoonsgegevens', 'DPIA_uitgevoerd', 'verwerkersovereenkomst', 'inschatting_aantal_betrokkenen')
 
