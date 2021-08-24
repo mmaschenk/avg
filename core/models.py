@@ -59,6 +59,18 @@ class AVGRegisterline(models.Model):
     bron_waar_de_gegevens_worden_verkregen = models.CharField(max_length=256)
     DPIA_uitgevoerd = models.BooleanField(null=True)
     bevat_persoonsgegevens = models.BooleanField(null=True)
+
+    def __str__(self):
+        return "{}@{} [{}]".format(self.verwerking,self.applicatienaam, self.id)
+
+class ExternalReference(models.Model):
+    source = models.CharField(max_length=64)
+    sourcekey = models.CharField(max_length=128)
+    avgregisterline = models.ForeignKey(AVGRegisterline, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return "{}:{} -> {}".format(self.source, self.sourcekey, self.avgregisterline)
+
 class SharepointExcelFile(models.Model):
     data = models.FileField()
     uploaded = models.DateTimeField(auto_now_add=True)
@@ -162,3 +174,4 @@ class SharepointExcelFile(models.Model):
             avg.save()
             
         return index
+

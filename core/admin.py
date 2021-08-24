@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import AVGRegisterline, SharepointExcelFile
+from .models import AVGRegisterline, SharepointExcelFile, ExternalReference
 
 from django.contrib.admin import AdminSite
 
@@ -60,6 +60,10 @@ admin.site.site_header = 'AVG Register TU Delft'
 def deleteAllAVG(modeladmin, request, queryset):
     AVGRegisterline.objects.all().delete()
 
+class ExternalReferenceInline(admin.TabularInline):
+    model = ExternalReference
+    extra = 1
+
 @admin.register(AVGRegisterline)
 #@admin_site.register(AVGRegisterline)
 class AVGRegisterlineAdmin(admin.ModelAdmin):
@@ -73,6 +77,7 @@ class AVGRegisterlineAdmin(admin.ModelAdmin):
 
     search_fields = ( 'verwerking', 'applicatienaam')
     
+    inlines = [ExternalReferenceInline, ]
     actions = [ deleteAllAVG ]
     list_display_links = ('verwerking', 'applicatienaam',)
     list_display = ( 
@@ -147,6 +152,11 @@ class AVGRegisterlineAdmin(admin.ModelAdmin):
     list_filter = ( 'bevat_persoonsgegevens', 'DPIA_uitgevoerd', 'verwerkersovereenkomst', 'inschatting_aantal_betrokkenen')
 
     empty_value_display = '-'
+
+
+@admin.register(ExternalReference)
+class ExternalReferenceAdmin(admin.ModelAdmin):
+    pass
 
 @admin.register(SharepointExcelFile)
 class SharepointExcelFileAdmin(admin.ModelAdmin):
