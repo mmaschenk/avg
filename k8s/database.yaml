@@ -22,14 +22,14 @@ spec:
             name: config
         image: mariadb:10.5.6
         name: db
-        volumeMounts:
-        - mountPath: /var/lib/mysql
-          name: db
+        #volumeMounts:
+        #- mountPath: /var/lib/mysql
+        #  name: db
       restartPolicy: Always
-      volumes:
-      - name: db
-        persistentVolumeClaim:
-          claimName: database-pvc
+      #volumes:
+      #- name: db
+      #  persistentVolumeClaim:
+      #    claimName: database-pvc
 ---
 apiVersion: v1
 kind: Service
