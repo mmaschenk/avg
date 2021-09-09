@@ -30,6 +30,7 @@ from rest_framework.authtoken.models import Token
 
 router = routers.DefaultRouter()
 router.register(r'avgregisterline', views.AVGRegisterlineViewSet)
+router.register(r'externals', views.ExternalReferenceViewSet)
 
 class IndexView(TemplateView):
     template_name = "index.html"
@@ -51,7 +52,7 @@ urlpatterns = [
     ), name='swagger-ui'),
     path('apischema', get_schema_view(
         title="TU Delft AVG Register",
-        description="API for manipulating AVG regsitrations",
+        description="API for manipulating AVG registrations",
         version="1.0.0"
     ), name='openapi-schema'),
     path('', IndexView.as_view()),
