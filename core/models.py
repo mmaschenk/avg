@@ -66,6 +66,7 @@ class AVGRegisterline(models.Model):
 class ExternalReference(models.Model):
     source = models.CharField(max_length=64)
     sourcekey = models.CharField(max_length=128)
+    last_updated = models.DateTimeField()
     avgregisterline = models.ForeignKey(AVGRegisterline, on_delete=models.CASCADE, related_name='externals')
 
     def __str__(self):

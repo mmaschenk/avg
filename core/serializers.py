@@ -1,18 +1,25 @@
 from .models import AVGRegisterline, ExternalReference
 from rest_framework import serializers
 
+
 class ExternalReferenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = ExternalReference
-        fields = [ 'source', ]
-        fields = '__all__'
+        exclude = []
+
+
 class AVGRegisterlineSerializer(serializers.ModelSerializer):
     class Meta:
         model = AVGRegisterline
-        fields = [ 'applicatienaam', 'naam_opslagmedium', 'externals' ]
-        #fields = '__all__'
-        #fields = [ '__all__ ']
-        exclude = [ ]
+        exclude = []
+
+
+class AVGRegisterlineExternalReferenceSerializer(serializers.ModelSerializer):
+    ExternalReference = ExternalReferenceSerializer()
+
+    class Meta:
+        model = AVGRegisterline
+        exclude = []
 
 """
         prut = {
