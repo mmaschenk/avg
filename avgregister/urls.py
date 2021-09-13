@@ -31,7 +31,7 @@ from rest_framework.authtoken.models import Token
 router = routers.DefaultRouter()
 router.register(r'avgregisterline', views.AVGRegisterlineViewSet)
 router.register(r'externals', views.ExternalReferenceViewSet)
-router.register(r'avgregisterlineexternalresource', views.AVGRegisterLineExternalReferenceViewSet)
+router.register(r'avgregisterlineexternalreferencee', views.AVGRegisterLineExternalReferenceViewSet)
 
 
 class IndexView(TemplateView):
