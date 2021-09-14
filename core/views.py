@@ -19,6 +19,15 @@ class ExternalReferenceViewSet(viewsets.ModelViewSet):
 
 
 class AVGRegisterLineExternalReferenceViewSet(viewsets.ModelViewSet):
-    queryset = AVGRegisterline.objects.all()
+    queryset = ExternalReference.objects.all()
     serializer_class = AVGRegisterlineExternalReferenceSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        avg_line = serializer.data
+        ext_ref = avg_line.pop("ExternalReference")
+        avg_line = AVGRegisterline.objects.create(**avg_line)
+        ext_ref.update({"avgregisterline_id": avg_line.id})
+        ExternalReference.objects.create(**ext_ref)
+
+
