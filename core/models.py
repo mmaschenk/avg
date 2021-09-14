@@ -1,12 +1,7 @@
 from django.db import models
-from django.db.models.fields import CharField
-
-from django.db.utils import IntegrityError
 from datetime import datetime
 import pandas as pd
 import re
-
-# Create your models here.
 
 
 class AVGRegisterline(models.Model):
@@ -64,6 +59,7 @@ class AVGRegisterline(models.Model):
     def __str__(self):
         return "{}@{} [{}]".format(self.verwerking,self.applicatienaam, self.id)
 
+
 class ExternalReference(models.Model):
     source = models.CharField(max_length=64)
     sourcekey = models.CharField(max_length=128)
@@ -73,10 +69,10 @@ class ExternalReference(models.Model):
     def __str__(self):
         return "{}:{} -> {}".format(self.source, self.sourcekey, self.avgregisterline)
 
+
 class SharepointExcelFile(models.Model):
     data = models.FileField()
     uploaded = models.DateTimeField(auto_now_add=True)
-
 
     def save(self, *args, **kwargs):
         adding = self._state.adding
