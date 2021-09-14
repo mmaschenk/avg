@@ -8,6 +8,7 @@ import re
 
 # Create your models here.
 
+
 class AVGRegisterline(models.Model):
     verwerking = models.CharField(null=True, max_length=256,blank=True)
     applicatienaam = models.CharField(max_length=256,blank=True)
@@ -67,7 +68,7 @@ class ExternalReference(models.Model):
     source = models.CharField(max_length=64)
     sourcekey = models.CharField(max_length=128)
     last_updated = models.DateTimeField(null=True)
-    avgregisterline = models.ForeignKey(AVGRegisterline, on_delete=models.CASCADE, related_name='externals')
+    avgregisterline = models.OneToOneField(AVGRegisterline, on_delete=models.CASCADE, related_name='external_reference')
 
     def __str__(self):
         return "{}:{} -> {}".format(self.source, self.sourcekey, self.avgregisterline)

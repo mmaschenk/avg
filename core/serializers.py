@@ -5,21 +5,17 @@ from rest_framework import serializers
 class ExternalReferenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = ExternalReference
-        fields = ["sourcekey", "last_updated", "source"]
+        fields = ["source", "sourcekey", "last_updated"]
 
 
 class AVGRegisterlineSerializer(serializers.ModelSerializer):
+    external_reference = ExternalReferenceSerializer()
+
     class Meta:
         model = AVGRegisterline
         exclude = []
 
 
-class AVGRegisterlineExternalReferenceSerializer(serializers.ModelSerializer):
-    ExternalReference = ExternalReferenceSerializer(many=True)
-    #AVGRegisterline = AVGRegisterlineSerializer()
-    class Meta:
-        model = AVGRegisterline
-        exclude = []
 
 """
         prut = {
