@@ -32,6 +32,7 @@ router = routers.DefaultRouter()
 router.register(r'avgregisterline', views.AVGRegisterlineViewSet)
 router.register(r'externals', views.ExternalReferenceViewSet)
 
+
 class IndexView(TemplateView):
     template_name = "index.html"
 
