@@ -2,7 +2,7 @@ from rest_framework.test import APIRequestFactory, APITestCase
 from django.contrib.auth.models import User
 from django.test import TestCase
 
-from core.models import AVGRegisterline as AVGR
+from core.models import AVGRegisterline as AVGR, ExternalReference
 # Create your tests here.
 
 class AVGRegisterlineRestTestCase(TestCase):
@@ -17,7 +17,7 @@ class AVGRegisterlineRestTestCase(TestCase):
 class AVGRegisterlineApiTestCase(APITestCase):
   def setUp(self):
     self.user = User.objects.create(username='admin')
-    AVGR.objects.create(verwerking='Uitgifte van passen voor de laadpalen', 
+    av1 = AVGR.objects.create(verwerking='Uitgifte van passen voor de laadpalen', 
       applicatienaam='EV-Box', 
       naam_opslagmedium="cloud",
       doel_van_de_verwerking="registratie van kaarten die uitgegeven worden aan personen die daarmee hun auto kunnen opladen bij een laadpaal. ",
@@ -70,6 +70,8 @@ class AVGRegisterlineApiTestCase(APITestCase):
     )
     AVGR.objects.create(verwerking='Toegangsbeheer', applicatienaam='MyOTA')
     AVGR.objects.create(verwerking='Toegangsbeheer', applicatienaam='CardsOnLine')
+
+    ExternalReference.objects.create(source='dmponline', sourcekey='1234', avgregisterline=av1)
     self.client.force_authenticate(user=self.user)
 
   def test_avglines(self):
@@ -83,6 +85,19 @@ class AVGRegisterlineApiTestCase(APITestCase):
     self.assertEqual(response.status_code, 200)
 
     self.assertEqual(response.data['applicatienaam'], 'EV-Box')
-    print(response.data)
+    #print(response.data)
 
-    print(response.content)
+    #print(response.content)
+
+  def test_external(self):
+    response = self.client.post('/api/avgregisterline/external/')
+    self.assertEqual(response.status_code, 200, "Post without valid json should succeed with http status 200")
+    self.assertEqual(response.data['status'], 'ERROR', "Post without valid json should return status 'ERROR'")
+
+    response = self.client.post('/api/avgregisterline/external/', {
+      "source": "dmponline",
+      "sourcekey": "12345",
+      "avgregisterline": {  'verwerking': 'Iets belangrijks', 'applicatienaam': 'Niet van toepassing'} }, format='json')
+    self.assertEqual(response.status_code, 200, "Post with valid json should succeed with http status 200")
+    self.assertEqual(response.data['status'], 'OK', "Post with valid json should return status 'OK'")
+
