@@ -54,7 +54,7 @@ class AVGRegisterline(models.Model):
     ontvangers = models.CharField(max_length=256,blank=True)
     in_welke_landen_worden_de_gegevens_verwerkt = models.CharField(max_length=256,blank=True)
     vestigingsland_van_de_verwerker = models.CharField(max_length=256,blank=True)
-    bewaartermijn = models.TextField()
+    bewaartermijn = models.TextField(null=True, blank=True)
     beveiligingsmaatregelen_die_genomen_worden_om_de_gegevens_te_beveiligen = models.TextField(db_column="beveiligingsmaatregelen",blank=True)
     bron_waar_de_gegevens_worden_verkregen = models.CharField(max_length=256,blank=True)
     DPIA_uitgevoerd = models.BooleanField(null=True,blank=True)
