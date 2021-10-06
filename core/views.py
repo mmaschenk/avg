@@ -38,16 +38,18 @@ class AVGRegisterlineViewSet(viewsets.ModelViewSet):
         ser = self.get_serializer(data=request.data)
 
         if not ser.is_valid():
-            return Response({'status': 'ERROR', 'reason': ser.errors})
+            return Response({}, status=400)
 
         source = ser.validated_data['source']
         sourcekey = ser.validated_data['sourcekey']
+
+        status_code = 200
 
         try:
             ex = ExternalReference.objects.get(source=source,sourcekey=sourcekey)
 
             if 'id' in ser.validated_data['avgregisterline']:
-                return Response({'status': 'ERROR', 'detail': 'Cannot enter id with existing externalref'})
+                return Response("Cannot change avgregisterline-id of existing record", status=406)
 
             avgregisterline = ex.avgregisterline
             self.simplepatch(avgregisterline, ser.validated_data['avgregisterline'])
@@ -61,6 +63,7 @@ class AVGRegisterlineViewSet(viewsets.ModelViewSet):
                 self.simplepatch(avgregisterline,ser.validated_data['avgregisterline'])
             else:
                 avgregisterline = AVGRegisterline(**ser.validated_data['avgregisterline'])
+                status_code = 201
 
             avgregisterline.save()
             ex.avgregisterline = avgregisterline
@@ -68,7 +71,7 @@ class AVGRegisterlineViewSet(viewsets.ModelViewSet):
 
         exserial = ExternalReferenceSerializer(ex)
 
-        return Response({'status': 'OK', 'externalreference': exserial.data})
+        return Response(exserial.data)
 
 
 class ExternalReferenceViewSet(viewsets.ModelViewSet):

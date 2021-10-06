@@ -90,8 +90,7 @@ class AVGRegisterlineApiTestCase(APITestCase):
 
     def test_external_basic(self):
         response = self.client.post('/api/avgregisterline/external/')
-        self.assertEqual(response.status_code, 200, "Post without valid json should succeed with http status 200")
-        self.assertEqual(response.data['status'], 'ERROR', "Post without valid json should return status 'ERROR'")
+        self.assertEqual(response.status_code, 400, "Post without valid json should return with http status 400")
 
     def test_external_full_insert(self):
         response = self.client.post('/api/avgregisterline/external/', {
@@ -99,12 +98,9 @@ class AVGRegisterlineApiTestCase(APITestCase):
             "sourcekey": "12345",
             "avgregisterline": {  'verwerking': 'Iets belangrijks', 'applicatienaam': 'Niet van toepassing'} }, format='json')
 
-        self.assertEqual(response.status_code, 200, "Post with valid json should succeed with http status 200")
-        self.assertEqual(response.data['status'], 'OK', "Post with valid json should return status 'OK'")
+        self.assertEqual(response.status_code, 200, "Post with valid json should succeed with http status 200")        
 
-        self.assertIn('externalreference', response.data, "Externalreference record should be returned")
-
-        externalrefdata = response.data['externalreference']
+        externalrefdata = response.data
         self.assertIn('id', externalrefdata, "Id field should be present in externalreference record")
         self.assertIsNotNone( externalrefdata['id'], "Id field should be real in externalreference record")
 
@@ -127,9 +123,7 @@ class AVGRegisterlineApiTestCase(APITestCase):
             "sourcekey": "12345",
             "avgregisterline": {  'id': self.av1.id, 'verwerking': 'Iets belangrijks', 'applicatienaam': 'Niet van toepassing'} }, format='json')
 
-        self.assertIn('externalreference', response.data, "Externalreference record should be returned")
-
-        externalrefdata = response.data['externalreference']
+        externalrefdata = response.data
         self.assertIn('id', externalrefdata, "Id field should be present in externalreference record")
         self.assertIsNotNone( externalrefdata['id'], "Id field should be real in externalreference record")
 
@@ -153,8 +147,7 @@ class AVGRegisterlineApiTestCase(APITestCase):
             "sourcekey": "1234",
             "avgregisterline": {  'verwerking': 'Iets belangrijks', 'applicatienaam': 'Niet van toepassing'} }, format='json')
 
-        self.assertIn('externalreference', response.data, "Externalreference record should be returned")
-        externalrefdata = response.data['externalreference']
+        externalrefdata = response.data
         self.assertIn('id', externalrefdata, "Id field should be present in externalreference record")
         self.assertIsNotNone( externalrefdata['id'], "Id field should be real in externalreference record")
 
