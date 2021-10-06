@@ -49,8 +49,9 @@ class AVGRegisterlineViewSet(viewsets.ModelViewSet):
             if 'id' in ser.validated_data['avgregisterline']:
                 return Response({'status': 'ERROR', 'detail': 'Cannot enter id with existing externalref'})
 
-            avg = ex.avgregisterline
-            self.simplepatch(avg, ser.validated_data['avgregisterline'])
+            avgregisterline = ex.avgregisterline
+            self.simplepatch(avgregisterline, ser.validated_data['avgregisterline'])
+            avgregisterline.save()
 
         except ExternalReference.DoesNotExist:
             ex = ExternalReference(source=source,sourcekey=sourcekey)
