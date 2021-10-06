@@ -1,24 +1,57 @@
 from .models import AVGRegisterline, ExternalReference
 from rest_framework import serializers
-
+from rest_framework.utils import model_meta
+from collections import OrderedDict
 
 class AVGRegisterlineSerializer(serializers.ModelSerializer):
     class Meta:
         model = AVGRegisterline
-        #fields = [ 'applicatienaam', 'naam_opslagmedium', 'externals' ]
         fields = '__all__'
-        #fields = [ '__all__ ']
         exclude = [ ]
+        read_only_fields = []
+
+class EmbeddedAVGRegisterlineSerializer(AVGRegisterlineSerializer):
+    id = serializers.IntegerField(label='ID', required=False)
+
+    def create(self, validated_data):
+        print("Also creating", validated_data)
+        try:
+            ex = AVGRegisterline.objects.get(id=validated_data['id'])
+            self._created = False
+        except:
+            print("Couldn't")
+            ex = AVGRegisterline(**validated_data)
+            self._created = True
+        return ex
+
+    def update(self, instance, validated_data):
+        info = model_meta.get_field_info(instance)
+
+        for attr, value in validated_data.items():
+            if attr not in info.relations:
+                setattr(instance, attr, value)
+
+        instance.save()
+        return instance
+        raise NotImplementedError('`update()` must be implemented.')
+
+class SkipField(Exception):
+    pass
 
 class ExternalReferenceSerializer(serializers.ModelSerializer):
-    avgregisterline = AVGRegisterlineSerializer()
+    avgregisterline = EmbeddedAVGRegisterlineSerializer()
+    #id = serializers.IntegerField(label='ID', required=False)
+
+    def create(self, validated_data):
+        ex = ExternalReference(source=source, sourcekey=sourcekey, avgregisterline=avgregisterline)
         
+        return ex
+
     class Meta:
         model = ExternalReference
-        fields = [ 'source', 'sourcekey', 'avgregisterline' ]
-        #fields = '__all__'
+        fields = '__all__'
 
-
+    
 """
         prut = {
         "verwerking": "Ziekteverzuim administratie",
