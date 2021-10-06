@@ -71,6 +71,11 @@ class ExternalReference(models.Model):
     def __str__(self):
         return "{}:{} -> {}".format(self.source, self.sourcekey, self.avgregisterline)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['source', 'sourcekey'], name='unique_external')
+        ]
+
 class SharepointExcelFile(models.Model):
     data = models.FileField()
     uploaded = models.DateTimeField(auto_now_add=True)
