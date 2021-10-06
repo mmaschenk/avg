@@ -35,10 +35,7 @@ class AVGRegisterlineViewSet(viewsets.ModelViewSet):
         was already present) or insert (if this is a new source/sourcekey combination) the avgregister-record.
         """
 
-        print("Doing it")
         ser = self.get_serializer(data=request.data)
-        print(request.data)
-        print("Valid:", ser.is_valid(), ser.errors)
 
         if not ser.is_valid():
             return Response({'status': 'ERROR', 'reason': ser.errors})
@@ -48,36 +45,21 @@ class AVGRegisterlineViewSet(viewsets.ModelViewSet):
 
         try:
             ex = ExternalReference.objects.get(source=source,sourcekey=sourcekey)
-            print("Found externalref")
 
             if 'id' in ser.validated_data['avgregisterline']:
                 return Response({'status': 'ERROR', 'detail': 'Cannot enter id with existing externalref'})
 
             avg = ex.avgregisterline
-
             self.simplepatch(avg, ser.validated_data['avgregisterline'])
 
         except ExternalReference.DoesNotExist:
-            print( "New externalref")
             ex = ExternalReference(source=source,sourcekey=sourcekey)
 
             if 'id' in ser.validated_data['avgregisterline']:
-                print("Need to find existing record and update")
                 avgregisterline = AVGRegisterline.objects.get(id=ser.validated_data['avgregisterline']['id'])
-                print('avgregisterline',avgregisterline)
-
                 self.simplepatch(avgregisterline,ser.validated_data['avgregisterline'])
-                """
-                info = model_meta.get_field_info(avgregisterline)
-
-                for attr, value in ser.validated_data['avgregisterline'].items():
-                    if attr not in info.relations:
-                        setattr(avgregisterline, attr, value)
-                """
             else:
-                print("Need to add avg record")
                 avgregisterline = AVGRegisterline(**ser.validated_data['avgregisterline'])
-                print('avgregisterline',avgregisterline)
 
             avgregisterline.save()
             ex.avgregisterline = avgregisterline
@@ -87,47 +69,6 @@ class AVGRegisterlineViewSet(viewsets.ModelViewSet):
 
         return Response({'status': 'OK', 'externalreference': exserial.data})
 
-
-        #print("Checking ", source, sourcekey)
-
-        #ser.is_valid()
-        #ser.save()
-        
-        #print('si', ser.instance.id)
-        #print('se', ser._errors)
-
-        #return Response({'status': 'OK', 'avgregisterline': ser.avg.data, 'externalreference': ser.data,
-        #    'avgrecordadded': ser.avg._created, 'externalreferenceadded': ser._created})
-        """
-        try:
-            ex = ExternalReference.objects.get(source=source,sourcekey=sourcekey)
-            print("Found ", ex)
-        except ExternalReference.DoesNotExist:
-            print("Need to make a new reference")
-            print("validated", ser.validated_data)
-            avgdata = ser.validated_data['avgregisterline']
-            print('avgdata: ',avgdata)
-            avg = AVGRegisterline(**avgdata)
-            print('avg', avg)
-            if 'id' not in ser.validated_data['avgregisterline']:
-                print('Hell no')
-                print('id present', avg.id)
-            else:
-                avg2 = AVGRegisterline.objects.get(id=avg.id)
-                print('avg2', avg2)
-                ser.avgregisterline.save()
-            avg.save()
-            newex = ExternalReference(source=source, sourcekey=sourcekey, avgregisterline=avg)
-            newex.save()
-            print('avg', avg)
-            avgserial = AVGRegisterlineSerializer(avg)
-            exserial = ExternalReferenceSerializer(newex)
-            return Response({'status': 'OK', 'avgregisterline': avgserial.data, 'externalreference': exserial.data})
-        """
-
-        #print("Serializer", ser)
-        #input = self.get_object()
-        #return Response({'status': 'OK'})
 
 class ExternalReferenceViewSet(viewsets.ModelViewSet):
     queryset = ExternalReference.objects.all()
